@@ -7,8 +7,11 @@ namespace MainClass
     {
         static void Main(string[] args)
         {
-            User user = new User("Mast");
-            Console.WriteLine(user.GetUserName());
+            GameAccount user = new GameAccount("Mast");
+            GameAccount gamer = new GameAccount("Deremion");
+            user.StartGame(gamer);
+            gamer.StartGame(user);
+            user.GetStats();
         }
     }
 }
