@@ -50,25 +50,14 @@ namespace GameClasses
             GameCount++;
         }
 
-        public void StartGame(GameAccount other)
+        public void AddStatistic(Game stats)
         {
-            var rand = new Random();
-            if (rand.Next(0, 2) == 0)
-            {
-                Game newGame = new Game(this, other);
-                this.games.Add(newGame);
-                other.games.Add(newGame);
-            }
-            else
-            {
-                Game newGame = new Game(other, this);
-                this.games.Add(newGame);
-                other.games.Add(newGame);
-            }
+            games.Add(stats);
         }
 
         public void GetStats()
         {
+            Console.WriteLine("\t\tGames statistic:\n");
             for (int i = 0; i < this.games.Count(); i++)
             {
                 games[i].GetStatistic();
@@ -79,26 +68,59 @@ namespace GameClasses
 
     class Game
     {
-        private static int IdentificationNumber { get; set; }
-        GameAccount Winner { get; set; }
-        GameAccount Loser { get; set; }
+        private int IdentificationNumber { get; set; }
+        GameAccount User1 { get; set; }
+        GameAccount User2 { get; set; }
+        private string GameStatistic { get; set; }
 
 
 
-        public Game(GameAccount winner, GameAccount loser)
+        public Game(GameAccount user1, GameAccount user2)
         {
-            Winner = winner;
-            Loser = loser;
-            winner.WinGame();
-            loser.LoseGame();
-            IdentificationNumber = 1000;
-            IdentificationNumber++;
+            if (user1 == user2)
+            {
+                throw new InvalidDataException("You can't play with yourself!");
+            }
+            User1 = user1;
+            User2 = user2;
+
+            var rand = new Random();
+            IdentificationNumber = rand.Next(1000, 10000);
+            GameStatistic = "-";
+        }
+
+        public string StartGame()
+        {
+            string winner = "";
+            var rand = new Random();
+            if (rand.Next(0, 2) == 0)
+            {
+                User1.WinGame();
+                User2.LoseGame();
+                winner = User1.GetUserName();
+
+                GameStatistic = $"\t Game Identification Number: {IdentificationNumber}\n\t Winner: {User1.GetUserName()}\t\t Loser: {User2.GetUserName()}" +
+                $"\n\t {User1.GetUserName()} current raiting: {User1.GetCurentRaiting()}\t\t {User2.GetUserName()} current raiting: {User2.GetCurentRaiting()}";
+            }
+            else
+            {
+                User1.LoseGame();
+                User2.WinGame();
+                winner = User2.GetUserName();
+
+                GameStatistic = $"\t Game Identification Number: {IdentificationNumber}\n\t Winner: {User2.GetUserName()}\t\t Loser: {User1.GetUserName()}" +
+                $"\n\t {User2.GetUserName()} current raiting: {User2.GetCurentRaiting()}\t\t {User1.GetUserName()} current raiting: {User1.GetCurentRaiting()}";
+                
+            }
+            User1.AddStatistic(this);
+            User2.AddStatistic(this);
+
+            return winner;
         }
 
         public void GetStatistic() 
         {
-            Console.WriteLine($"\t Game Identification Number: {IdentificationNumber}\n\t Winner: {Winner.GetUserName()}\t\t Loser: {Loser.GetUserName}" +
-                $"\n\t {Winner.GetUserName()} current raiting: {Winner.GetCurentRaiting()}\t\t {Loser.GetUserName()} current raiting: {Loser.GetCurentRaiting()}");
+            Console.WriteLine(GameStatistic);
         }
     }
 }

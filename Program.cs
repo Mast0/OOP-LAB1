@@ -9,8 +9,12 @@ namespace MainClass
         {
             GameAccount user = new GameAccount("Mast");
             GameAccount gamer = new GameAccount("Deremion");
-            user.StartGame(gamer);
-            gamer.StartGame(user);
+            for (int i = 0; i < 10; i++)
+            {
+                Game newGame = new Game(user, gamer);
+                Console.WriteLine($"Game №{i+1} is end.\n\t Winner: {newGame.StartGame()}\n\n");
+            }
+
             user.GetStats();
         }
     }
