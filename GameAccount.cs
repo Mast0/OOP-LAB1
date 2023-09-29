@@ -9,45 +9,32 @@ namespace GameClasses
 {
     class GameAccount
     {
-        private string UserName { get; }
-        private int CurrentRating { get; set; }
-        private int GameCount { get; set; }
+        private string username;
+        private int raiting;
+        public string UserName { get { return username; } }
+        public int CurrentRating { 
+            get { return raiting; } set {
+				if (value > 1)
+				{
+					raiting = value;
+				}
+			} }
+        public int GameCount { get { return games.Count; } }
         private List<Game> games = new List<Game>();
 
         public GameAccount(string userName) {
-            UserName = userName;
-            CurrentRating = 1;
-            GameCount = 0;
-        }
-
-        public string GetUserName()
-        {
-            return UserName;
-        }
-
-        public int GetCurentRaiting()
-        {
-            return CurrentRating;
-        }
-
-        public int GetGameCount()
-        {
-            return GameCount;
+            username = userName;
+            raiting = 1;
         }
 
         public void WinGame()
         {
             CurrentRating++;
-            GameCount++;
         }
 
         public void LoseGame()
         {
-            if (CurrentRating-1 >= 1)
-            {
-                CurrentRating--;
-            }
-            GameCount++;
+            CurrentRating--;
         }
 
         public void AddStatistic(Game stats)
@@ -68,7 +55,8 @@ namespace GameClasses
 
     class Game
     {
-        private int IdentificationNumber { get; set; }
+        private int Index;
+        public static int IdentificationNumber;
         GameAccount User1 { get; set; }
         GameAccount User2 { get; set; }
         private string GameStatistic { get; set; }
@@ -83,9 +71,9 @@ namespace GameClasses
             }
             User1 = user1;
             User2 = user2;
+            IdentificationNumber++;
+            Index = IdentificationNumber;
 
-            var rand = new Random();
-            IdentificationNumber = rand.Next(1000, 10000);
             GameStatistic = "-";
         }
 
@@ -97,19 +85,19 @@ namespace GameClasses
             {
                 User1.WinGame();
                 User2.LoseGame();
-                winner = User1.GetUserName();
+                winner = User1.UserName;
 
-                GameStatistic = $"\t Game Identification Number: {IdentificationNumber}\n\t Winner: {User1.GetUserName()}\t\t Loser: {User2.GetUserName()}" +
-                $"\n\t {User1.GetUserName()} current raiting: {User1.GetCurentRaiting()}\t\t {User2.GetUserName()} current raiting: {User2.GetCurentRaiting()}";
+                GameStatistic = $"\t Game Identification Number: {Index}\n\t Winner: {User1.UserName}\t\t Loser: {User2.UserName}" +
+                $"\n\t {User1.UserName} current raiting: {User1.CurrentRating}\t\t {User2.UserName} current raiting: {User2.CurrentRating}";
             }
             else
             {
                 User1.LoseGame();
                 User2.WinGame();
-                winner = User2.GetUserName();
+                winner = User2.UserName;
 
-                GameStatistic = $"\t Game Identification Number: {IdentificationNumber}\n\t Winner: {User2.GetUserName()}\t\t Loser: {User1.GetUserName()}" +
-                $"\n\t {User2.GetUserName()} current raiting: {User2.GetCurentRaiting()}\t\t {User1.GetUserName()} current raiting: {User1.GetCurentRaiting()}";
+                GameStatistic = $"\t Game Identification Number: {Index}\n\t Winner: {User2.UserName}\t\t Loser: {User1.UserName}" +
+                $"\n\t {User2.UserName} current raiting: {User2.CurrentRating}\t\t {User1.UserName} current raiting: {User1.CurrentRating}";
                 
             }
             User1.AddStatistic(this);

@@ -7,6 +7,7 @@ namespace MainClass
     {
         static void Main(string[] args)
         {
+            Game.IdentificationNumber = 1000;
             GameAccount user = new GameAccount("Mast");
             GameAccount gamer = new GameAccount("Deremion");
             for (int i = 0; i < 10; i++)
